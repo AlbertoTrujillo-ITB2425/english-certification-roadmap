@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Smart English Planner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 font-sans text-slate-900 pb-20">
+
+    <div class="max-w-2xl mx-auto py-10 px-6">
+        <header class="text-center mb-10">
+            <span class="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest">Project 2026</span>
+            <h1 class="text-4xl font-extrabold text-slate-900 mt-4">Smart Prep Planner 🚀</h1>
+            <p class="text-slate-500 mt-2">Custom study plans based on your real experience.</p>
+        </header>
+
+        <div id="setupForm" class="bg-white p-8 rounded-3xl shadow-xl border border-slate-100 space-y-6">
+            
+            <div>
+                <label class="block text-sm font-bold mb-3 text-slate-700">Where did you learn English?</label>
+                <select id="background" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-400 transition-all">
+                    <option value="school">School / High School</option>
+                    <option value="academy">Private Academy</option>
+                    <option value="travel">Traveling / Living abroad</option>
+                    <option value="self">Self-taught at home (Movies, Games, Apps)</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-bold mb-3 text-slate-700">Speaking practice per week?</label>
+                <select id="speakingHours" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-400 transition-all">
+                    <option value="0">Hardly ever (0 hours)</option>
+                    <option value="2">A little (1-3 hours)</option>
+                    <option value="5">Regularly (4+ hours)</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-bold mb-3 text-slate-700">Current Level (or guess)</label>
+                <div class="grid grid-cols-3 gap-3">
+                    <button type="button" onclick="setLevel('A2')" class="level-btn p-3 border rounded-xl hover:bg-blue-50 transition-all" id="btn-A2">A2</button>
+                    <button type="button" onclick="setLevel('B1')" class="level-btn p-3 border rounded-xl hover:bg-blue-50 transition-all" id="btn-B1">B1</button>
+                    <button type="button" onclick="setLevel('B2')" class="level-btn p-3 border rounded-xl border-blue-500 bg-blue-50 font-bold" id="btn-B2">B2</button>
+                </div>
+            </div>
+
+            <hr class="border-slate-100">
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Daily Hours</label>
+                    <input type="number" id="hours" value="1" min="1" max="8" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Target Goal</label>
+                    <select id="target" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                        <option value="B2">Get B2</option>
+                        <option value="C1">Get C1</option>
+                    </select>
+                </div>
+            </div>
+
+            <button onclick="generateCustomPlan()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-2xl shadow-lg shadow-blue-200 transition-all transform hover:-translate-y-1">
+                Analyze & Create Plan
+            </button>
+        </div>
+
+        <div id="result" class="hidden mt-10 space-y-6">
+            <div class="bg-blue-600 p-6 rounded-3xl text-white shadow-xl">
+                <h2 class="text-xl font-bold">Your Personal Profile Analysis</h2>
+                <p id="profileAnalysis" class="mt-2 text-blue-100 italic"></p>
+            </div>
+
+            <div id="sprints" class="space-y-4">
+                </div>
+            
+            <button onclick="location.reload()" class="w-full py-3 text-slate-400 text-sm hover:underline">Restart Analysis</button>
+        </div>
+    </div>
+
+    <script>
+        let currentLevel = 'B2';
+
+        function setLevel(lvl) {
+            currentLevel = lvl;
+            document.querySelectorAll('.level-btn').forEach(btn => btn.classList.remove('border-blue-500', 'bg-blue-50', 'font-bold'));
+            document.getElementById('btn-' + lvl).classList.add('border-blue-500', 'bg-blue-50', 'font-bold');
+        }
+
+        function generateCustomPlan() {
+            const background = document.getElementById('background').value;
+            const speaking = document.getElementById('speakingHours').value;
+            const target = document.getElementById('target').value;
+            const hours = document.getElementById('hours').value;
+
+            // Analysis Logic
+            let analysisText = "";
+            if(background === 'self') analysisText = "Being self-taught gives you great vocabulary but we'll focus on formal structure. ";
+            if(background === 'travel') analysisText = "Your immersion experience is a huge plus for Listening! ";
+            if(speaking === '0') analysisText += "We noticed you need more Speaking practice; we added extra sessions there.";
+
+            document.getElementById('profileAnalysis').innerText = analysisText || "Great profile! Your goal is realistic with this consistency.";
+            
+            // Basic math for total days
+            const daysNeeded = target === 'C1' ? 120 : 60;
+            const totalDays = Math.ceil(daysNeeded / hours);
+
+            const sprintData = [
+                { title: "Phase 1: Foundation", color: "border-blue-500" },
+                { title: "Phase 2: Skills & Fluency", color: "border-purple-500" },
+                { title: "Phase 3: Exam Simulation", color: "border-green-500" }
+            ];
+
+            const container = document.getElementById('sprints');
+            container.innerHTML = '';
+
+            sprintData.forEach(s => {
+                container.innerHTML += `
+                    <div class="bg-white p-5 rounded-2xl border-l-8 ${s.color} shadow-sm">
+                        <h3 class="font-bold text-lg">${s.title}</h3>
+                        <p class="text-slate-500 text-sm">Target: ${Math.floor(totalDays/3)} days of focus.</p>
+                    </div>
+                `;
+            });
+
+            document.getElementById('setupForm').classList.add('hidden');
+            document.getElementById('result').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
