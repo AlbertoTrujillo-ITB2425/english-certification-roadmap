@@ -3,138 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart English Roadmap 2026</title>
+    <title>AI Personalized English Coach</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-50 font-sans text-slate-900 pb-20">
 
     <div class="max-w-4xl mx-auto py-10 px-6">
         <header class="text-center mb-12">
-            <span class="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest">Global Requirement</span>
-            <h1 class="text-5xl font-black text-slate-900 mt-4 tracking-tight">English Roadmap 2026</h1>
-            <p class="text-slate-500 mt-4 text-lg">From learner to certified professional: Your total immersion plan.</p>
+            <h1 class="text-5xl font-black text-indigo-700 mt-4 tracking-tight">Personalized Coach AI 🧠</h1>
+            <p class="text-slate-500 mt-4 text-lg">Your routine, your style, your English certificate.</p>
         </header>
 
-        <div id="setup" class="bg-white p-8 rounded-3xl shadow-xl border border-slate-100 mb-10">
+        <div id="setup" class="bg-white p-8 rounded-3xl shadow-xl border border-slate-100 mb-10 space-y-8">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label class="block text-sm font-bold text-slate-700 mb-2">When do you start?</label>
-                    <input type="date" id="startDate" class="w-full p-4 bg-slate-50 border rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Start & Target Dates</label>
+                    <div class="flex gap-2">
+                        <input type="date" id="startDate" class="w-1/2 p-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
+                        <input type="date" id="targetDate" class="w-1/2 p-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
+                    </div>
                 </div>
                 <div>
-                    <label class="block text-sm font-bold text-slate-700 mb-2">Target Goal</label>
-                    <select id="goal" class="w-full p-4 bg-slate-50 border rounded-2xl">
-                        <option value="B2">B2 - First Certificate</option>
-                        <option value="C1">C1 - Advanced</option>
-                    </select>
-                </div>
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-bold text-slate-700 mb-2">Learning Background</label>
-                    <select id="background" class="w-full p-4 bg-slate-50 border rounded-2xl">
-                        <option value="school">School / High School</option>
-                        <option value="academy">Private Academy</option>
-                        <option value="travel">Traveling / Living abroad</option>
-                        <option value="self">Self-taught / Personal interest</option>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Rest days per week?</label>
+                    <select id="restDays" class="w-full p-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="0">No rest (Hardcore)</option>
+                        <option value="1">1 Day (Sunday)</option>
+                        <option value="2">2 Days (Sat, Sun)</option>
+                        <option value="3">3 Days (Sat, Sun, Mon)</option>
                     </select>
                 </div>
             </div>
-            <button onclick="buildRoadmap()" class="w-full mt-8 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-2xl shadow-lg transition-transform hover:scale-[1.02]">
-                Generate My Personal Roadmap
+
+            <div>
+                <label class="block text-sm font-bold text-slate-700 mb-4 text-center">What's your learning style?</label>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <button onclick="setStyle('study')" id="style-study" class="style-btn p-4 border-2 rounded-2xl text-center border-indigo-600 bg-indigo-50 transition-all">
+                        <span class="text-2xl block">📚</span>
+                        <span class="font-bold text-sm">PC & Notebook</span>
+                        <p class="text-[10px] text-slate-500 mt-1 italic">Research & Writing</p>
+                    </button>
+                    <button onclick="setStyle('outdoor')" id="style-outdoor" class="style-btn p-4 border-2 rounded-2xl text-center border-slate-100 transition-all">
+                        <span class="text-2xl block">🌳</span>
+                        <span class="font-bold text-sm">Outdoor / Active</span>
+                        <p class="text-[10px] text-slate-500 mt-1 italic">Podcasts & Audio</p>
+                    </button>
+                    <button onclick="setStyle('social')" id="style-social" class="style-btn p-4 border-2 rounded-2xl text-center border-slate-100 transition-all">
+                        <span class="text-2xl block">🍿</span>
+                        <span class="font-bold text-sm">Movies & Social</span>
+                        <p class="text-[10px] text-slate-500 mt-1 italic">Netflix & Groups</p>
+                    </button>
+                </div>
+            </div>
+
+            <button onclick="generatePersonalizedPlan()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-5 rounded-2xl shadow-lg transition-all transform hover:scale-[1.01]">
+                Build My Tailored Roadmap
             </button>
         </div>
 
         <div id="roadmapResult" class="hidden">
-            <div class="bg-blue-600 p-6 rounded-3xl text-white shadow-xl mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                 <div>
-                    <h2 class="text-2xl font-bold">Your 30-Day Immersion Plan</h2>
-                    <p id="profileTip" class="text-blue-100 text-sm mt-1"></p>
+                    <h2 class="text-3xl font-black text-slate-800 italic uppercase">The English Quest ⚔️</h2>
+                    <p id="statsText" class="text-indigo-600 font-bold text-sm"></p>
                 </div>
-                <button onclick="downloadICS()" class="flex items-center gap-2 bg-white text-blue-600 px-6 py-3 rounded-xl font-bold shadow-md hover:bg-blue-50 transition-all">
-                    📥 Export to Google Calendar
+                <button onclick="downloadICS()" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-bold shadow-md">
+                    📥 Export to Calendar (.ics)
                 </button>
             </div>
-
-            <div id="calendarGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                </div>
-
-            <button onclick="location.reload()" class="w-full mt-10 py-3 text-slate-400 text-sm hover:underline italic">Restart analysis and try a new date</button>
+            <div id="calendarGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </div>
     </div>
 
     <script>
         document.getElementById('startDate').valueAsDate = new Date();
+        let selectedStyle = 'study';
         let planData = [];
 
-        const taskDatabase = {
-            1: "Vocabulary: Install Anki and learn 50 new words",
-            2: "Reading: Read 5 pages of an English book/article",
-            5: "Immersion: Watch a movie in VO (No subtitles allowed)",
-            10: "Writing: Write a structured post on an English Reddit sub",
-            15: "Grammar: Master the Verb Tenses (B2/C1 structures)",
-            20: "Listening: Listen to a 20-min podcast and summarize it",
-            25: "Mock Exam: Complete a full official Reading sample",
-            30: "Social Challenge: Join a Discord Voice Channel and speak for 30 min"
+        function setStyle(style) {
+            selectedStyle = style;
+            document.querySelectorAll('.style-btn').forEach(btn => {
+                btn.classList.remove('border-indigo-600', 'bg-indigo-50');
+                btn.classList.add('border-slate-100');
+            });
+            const activeBtn = document.getElementById('style-' + style);
+            activeBtn.classList.replace('border-slate-100', 'border-indigo-600');
+            activeBtn.classList.add('bg-indigo-50');
+        }
+
+        const taskPool = {
+            study: [
+                { t: "Grammar Hack 🏗️", d: "Research 'Inversion' and 'Cleft Sentences'. Write 10 original sentences in your notebook." },
+                { t: "The Architect 📝", d: "Read an article from The Economist. Map the main arguments using a flowchart in your journal." },
+                { t: "Writing Lab 🧪", d: "Go to 'Write & Improve' by Cambridge. Complete an essay task about 'Technology in Society'." },
+                { t: "Vocabulary Hunt 🔍", d: "Find 10 academic verbs (e.g., 'Exacerbate', 'Mitigate'). Create a flashcard for each." }
+            ],
+            outdoor: [
+                { t: "Podcast Walk 🚶", d: "Listen to '6 Minute English' by BBC while walking. Repeat the new idioms out loud in public!" },
+                { t: "Nature Shadowing 🌳", d: "Listen to a TED Talk. Try to repeat every sentence exactly 2 seconds after the speaker." },
+                { t: "Audio Reporter 🎙️", d: "Record yourself on your phone describing what you see in the street. Use only English for 5 mins." },
+                { t: "The Lyric Run 🏃", d: "Go for a run listening to a 'Lyrics Training' playlist. Try to identify the 'Past Perfect' in songs." }
+            ],
+            social: [
+                { t: "Netflix Hunter 🍿", d: "Watch 20 mins of 'Brooklyn 99' or 'The Bear' (No subs!). Write down 5 slang expressions." },
+                { t: "Discord Battle ⚔️", d: "Join a Voice Channel. Mission: Debate a stranger about why your favorite movie is the best." },
+                { t: "Reddit Warrior 📱", d: "Find a subreddit of your hobby. Write a comment longer than 50 words giving your opinion." },
+                { t: "The Karaoke Star 🎤", d: "Pick a song in English. Translate the lyrics and then sing it focusing on pronunciation." }
+            ]
         };
 
-        const tips = {
-            self: "Since you are self-taught, we've boosted formal grammar sessions.",
-            travel: "Your travel experience is great! Focus now on academic writing.",
-            school: "Moving past school English: Let's focus on real-world fluency.",
-            academy: "Use your academy base to master advanced exam strategies."
-        };
-
-        function buildRoadmap() {
+        function generatePersonalizedPlan() {
             const start = new Date(document.getElementById('startDate').value);
-            const bg = document.getElementById('background').value;
-            const grid = document.getElementById('calendarGrid');
+            const target = new Date(document.getElementById('targetDate').value);
+            const restDaysNum = parseInt(document.getElementById('restDays').value);
             
-            document.getElementById('profileTip').innerText = tips[bg];
-            grid.innerHTML = '';
-            planData = [];
+            const diffTime = Math.abs(target - start);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+            
+            if (diffDays <= 0) { alert("Target date must be in the future!"); return; }
 
-            for (let i = 1; i <= 30; i++) {
-                let date = new Date(start);
-                date.setDate(start.getDate() + (i - 1));
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = ''; planData = [];
+
+            let studyDayCounter = 0;
+            for (let i = 1; i <= diffDays; i++) {
+                let currentDate = new Date(start);
+                currentDate.setDate(start.getDate() + (i - 1));
                 
-                let task = taskDatabase[i] || "Skill reinforcement & Daily fluency practice";
-                planData.push({ day: i, date: new Date(date), task: task });
+                const dayOfWeek = currentDate.getDay(); // 0: Sun, 1: Mon, 6: Sat
+                
+                // FIXED REST LOGIC
+                let isRestDay = false;
+                if (restDaysNum === 1 && dayOfWeek === 0) isRestDay = true;
+                if (restDaysNum === 2 && (dayOfWeek === 0 || dayOfWeek === 6)) isRestDay = true;
+                if (restDaysNum === 3 && (dayOfWeek === 0 || dayOfWeek === 6 || dayOfWeek === 1)) isRestDay = true;
 
+                let task;
+                if (isRestDay) {
+                    task = { t: "RECOVER & RELAX 🔋", d: "Rest Day. Your brain is absorbing everything. No English today!" };
+                } else {
+                    task = taskPool[selectedStyle][studyDayCounter % taskPool[selectedStyle].length];
+                    studyDayCounter++;
+                }
+
+                planData.push({ day: i, date: new Date(currentDate), ...task });
+                
                 grid.innerHTML += `
-                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:border-blue-300 transition-colors">
-                        <div class="flex justify-between items-start mb-3">
-                            <span class="bg-blue-50 text-blue-600 text-[10px] font-black px-2 py-0.5 rounded uppercase">Day ${i}</span>
-                            <span class="text-[10px] text-slate-400 font-mono">${date.toDateString()}</span>
+                    <div class="bg-white p-6 rounded-3xl border transition-all hover:scale-105 ${isRestDay ? 'bg-slate-100 border-dashed border-slate-300 opacity-60' : 'border-slate-100 shadow-md border-t-4 border-indigo-500'}">
+                        <div class="flex justify-between mb-2 italic text-[10px] font-bold ${isRestDay ? 'text-slate-400' : 'text-indigo-500'}">
+                            <span>MISSION ${i}</span><span>${currentDate.toDateString()}</span>
                         </div>
-                        <p class="text-sm font-bold text-slate-800">${task}</p>
-                    </div>
-                `;
+                        <h3 class="font-bold text-slate-800 uppercase tracking-tight">${task.t}</h3>
+                        <p class="text-[11px] text-slate-500 mt-2 leading-relaxed">${task.d}</p>
+                    </div>`;
             }
+
+            document.getElementById('statsText').innerText = `${diffDays} Days Quest | ${selectedStyle.toUpperCase()} Style`;
             document.getElementById('setup').classList.add('hidden');
             document.getElementById('roadmapResult').classList.remove('hidden');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function downloadICS() {
-            let icsContent = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Smart English AI//Study Plan//EN\n";
-            
+            let ics = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Smart English AI//EN\n";
             planData.forEach(item => {
                 let dateStr = item.date.toISOString().replace(/-|:|\.\d+/g, "").split("T")[0];
-                icsContent += "BEGIN:VEVENT\n";
-                icsContent += `DTSTART;VALUE=DATE:${dateStr}\n`;
-                icsContent += `SUMMARY:English Day ${item.day}: ${item.task}\n`;
-                icsContent += "DESCRIPTION:Daily task for your certification plan.\n";
-                icsContent += "END:VEVENT\n";
+                ics += `BEGIN:VEVENT\nDTSTART;VALUE=DATE:${dateStr}\nSUMMARY:Day ${item.day}: ${item.t}\nDESCRIPTION:${item.d}\nEND:VEVENT\n`;
             });
-
-            icsContent += "END:VCALENDAR";
-
-            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-            const link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.setAttribute('download', 'my_english_plan.ics');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            ics += "END:VCALENDAR";
+            const blob = new Blob([ics], { type: 'text/calendar' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = 'english_quest_roadmap.ics'; a.click();
         }
     </script>
 </body>
